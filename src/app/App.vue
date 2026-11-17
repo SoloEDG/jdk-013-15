@@ -17,6 +17,7 @@ import { ChapterList, MediaPlayer, Transport } from "../features/chapters";
 import { HotspotLayer, HotspotDetail } from "../features/hotspots";
 import { InterviewPanel, PeopleList } from "../features/interviews";
 import { JournalPanel } from "../features/journal";
+import { AnchorPanel } from "../features/anchors";
 import { createWorkspace } from "./workspace";
 const w = createWorkspace(),
   about = ref(false),
@@ -104,8 +105,24 @@ async function fullscreen() {
               </div>
               <div class="drag-hint">
                 <MousePointer2 :size="14" /> 按住拖动，环顾四周
-              </div></PanoramaView
-            ><HotspotDetail
+              </div>
+              <div
+                v-if="w.resumeOffer.value"
+                class="resume-bar"
+                role="status"
+              >
+                <span>已继续上次方向</span
+                ><button class="resume-action" @click="w.useRecommended()">
+                  回到导演推荐方向</button
+                ><button
+                  class="resume-dismiss"
+                  aria-label="收起提示"
+                  @click="w.dismissResume()"
+                >
+                  <X :size="13" /></button
+                ></div
+            ></PanoramaView
+          ><HotspotDetail
               v-if="w.discovery.detail.value && !w.branch.personId.value"
               :hotspot="w.discovery.detail.value"
               :saved="w.journal.has(w.discovery.detail.value.id)"
@@ -120,7 +137,7 @@ async function fullscreen() {
             /><Transport
               :playback="w.playback"
               :disabled="!!w.branch.personId.value"
-              @reset="w.camera.reset()"
+              @reset="w.useRecommended()"
               @fullscreen="fullscreen"
             />
             <p v-if="fullError" role="status">{{ fullError }}</p>
@@ -138,6 +155,15 @@ async function fullscreen() {
             <div class="chapter-foot">
               <Headphones :size="15" /><span>建议佩戴耳机，沉浸聆听</span>
             </div>
+            <AnchorPanel
+              :anchors="w.anchors"
+              :chapter-id="w.playback.state.chapterId"
+              :camera-phase="w.camera.phase.value"
+              :locked="!!w.branch.personId.value"
+              @apply="w.applyAnchor($event)"
+              @remove="w.removeAnchor($event)"
+              @save="w.saveAnchor($event)"
+            />
             <div class="explore-toggle">
               <span><Eye :size="17" /> 场景探索热点</span
               ><button

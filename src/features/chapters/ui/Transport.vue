@@ -52,7 +52,11 @@ defineEmits<{ reset: []; fullscreen: [] }>();
         <option :value="0.5">0.5×</option>
         <option :value="1">1.0×</option>
         <option :value="1.5">1.5×</option></select
-      ><button aria-label="重置视角" @click="$emit('reset')">
+      ><button
+        :disabled="disabled"
+        aria-label="回到导演推荐视角"
+        @click="$emit('reset')"
+      >
         <RotateCcw /></button
       ><button aria-label="全屏" @click="$emit('fullscreen')">
         <Maximize />

@@ -12,6 +12,8 @@ export interface Chapter {
   video: string;
   location: string;
   description: string;
+  /** 导演推荐方向：进入章节时的默认构图 */
+  opening: Camera;
 }
 export interface Hotspot {
   id: string;
@@ -46,6 +48,18 @@ export interface Entry {
   camera: Camera;
   title: string;
   note: string;
+  createdAt: number;
+}
+/**
+ * 镜头锚点：用户为某章节收藏的命名构图。
+ * camera 以球面角度（yaw/pitch）与垂直视野（fov）记录，
+ * 不含任何像素量，因此窗口比例变化后仍对准同一对象。
+ */
+export interface Anchor {
+  id: string;
+  chapterId: string;
+  name: string;
+  camera: Camera;
   createdAt: number;
 }
 export type Command =

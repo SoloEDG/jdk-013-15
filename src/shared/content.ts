@@ -10,6 +10,7 @@ export const chapters: Chapter[] = [
     location: "东岸 · 老码头",
     description:
       "天色未亮，第一艘渔船已经靠岸。在潮水与岸线之间，听一座海港慢慢醒来。",
+    opening: { yaw: -14, pitch: 2, fov: 66 },
   },
   {
     id: "craft",
@@ -21,6 +22,7 @@ export const chapters: Chapter[] = [
     location: "南巷 · 造船作坊",
     description:
       "刨花落下，木纹里藏着海的方向。沿着老师傅的目光，寻找手艺留下的痕迹。",
+    opening: { yaw: 16, pitch: -6, fov: 60 },
   },
   {
     id: "night",
@@ -32,6 +34,7 @@ export const chapters: Chapter[] = [
     location: "西堤 · 归航灯塔",
     description:
       "日落以后，海港的灯一盏盏亮起。那些离开与归来，终将成为这片海的故事。",
+    opening: { yaw: 12, pitch: 4, fov: 68 },
   },
 ];
 export const hotspots: Hotspot[] = [

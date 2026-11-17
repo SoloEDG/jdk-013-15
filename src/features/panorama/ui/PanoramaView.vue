@@ -9,6 +9,7 @@ const error = ref(false);
 let render: ReturnType<typeof createRenderer> | undefined;
 let observer: ResizeObserver | undefined;
 let drag: { x: number; y: number } | undefined;
+let wheelTimer: number | undefined;
 function down(e: PointerEvent) {
   if ((e.target as HTMLElement).closest("button")) return;
   drag = { x: e.clientX, y: e.clientY };
@@ -18,6 +19,16 @@ function move(e: PointerEvent) {
   if (!drag) return;
   props.controller.move(e.clientX - drag.x, e.clientY - drag.y);
   drag = { x: e.clientX, y: e.clientY };
+}
+function up() {
+  if (!drag) return;
+  drag = undefined;
+  props.controller.settle();
+}
+function wheel(e: WheelEvent) {
+  props.controller.zoom(e.deltaY);
+  clearTimeout(wheelTimer);
+  wheelTimer = window.setTimeout(() => props.controller.settle(), 200);
 }
 onMounted(() => {
   try {
@@ -42,6 +53,7 @@ watch(
   () => render?.draw(props.controller.camera),
 );
 onUnmounted(() => {
+  clearTimeout(wheelTimer);
   observer?.disconnect();
   render?.dispose();
 });
@@ -53,9 +65,9 @@ onUnmounted(() => {
     :style="{ backgroundImage: `url(${source})` }"
     @pointerdown="down"
     @pointermove="move"
-    @pointerup="drag = undefined"
-    @pointercancel="drag = undefined"
-    @wheel.prevent="controller.zoom($event.deltaY)"
+    @pointerup="up"
+    @pointercancel="up"
+    @wheel.prevent="wheel"
   >
     <div v-if="error" class="media-warning">
       全景渲染不可用，正在显示静态场景
